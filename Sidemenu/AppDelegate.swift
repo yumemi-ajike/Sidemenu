@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  Sidemenu
 //
-//  Created by 寺家 篤史 on 2018/06/12.
-//  Copyright © 2018年 Yumemi Inc. All rights reserved.
+//  Created by Atsushi Jike on 2018/06/12.
+//  Copyright © 2018 Yumemi Inc. All rights reserved.
 //
 
 import UIKit
@@ -15,7 +15,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = MainViewController()
+        window?.makeKeyAndVisible()
+
         return true
     }
 
