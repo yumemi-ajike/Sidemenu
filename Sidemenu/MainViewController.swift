@@ -18,19 +18,21 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        contentViewController.viewControllers[0].view.backgroundColor = .white
         contentViewController.viewControllers[0].navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sidemenu", style: .plain, target: self, action: #selector(sidemenuBarButtonTapped(sender:)))
         addChildViewController(contentViewController)
         view.addSubview(contentViewController.view)
         contentViewController.didMove(toParentViewController: self)
 
         sidemenuViewController.delegate = self
+        sidemenuViewController.startPanGestureRecognizing()
     }
 
     @objc private func sidemenuBarButtonTapped(sender: Any) {
-        showSidemenu()
+        showSidemenu(animated: true)
     }
     
-    private func showSidemenu() {
+    private func showSidemenu(contentAvailability: Bool = true, animated: Bool) {
         if isShownSidemenu { return }
 
         addChildViewController(sidemenuViewController)
@@ -38,7 +40,9 @@ class MainViewController: UIViewController {
         sidemenuViewController.view.frame = contentViewController.view.bounds
         view.insertSubview(sidemenuViewController.view, aboveSubview: contentViewController.view)
         sidemenuViewController.didMove(toParentViewController: self)
-        sidemenuViewController.showContentView(animated: true)
+        if contentAvailability {
+            sidemenuViewController.showContentView(animated: animated)
+        }
     }
 
     private func hideSidemenu(animated: Bool) {
@@ -53,6 +57,23 @@ class MainViewController: UIViewController {
 }
 
 extension MainViewController: SidemenuViewControllerDelegate {
+    func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SidemenuViewController) -> UIViewController {
+        return self
+    }
+
+    func shouldPresentForSidemenuViewController(_ sidemenuViewController: SidemenuViewController) -> Bool {
+        /* You can specify sidemenu availability */
+        return true
+    }
+
+    func sidemenuViewControllerDidRequestShowing(_ sidemenuViewController: SidemenuViewController, contentAvailability: Bool, animated: Bool) {
+        showSidemenu(contentAvailability: contentAvailability, animated: animated)
+    }
+
+    func sidemenuViewControllerDidRequestHiding(_ sidemenuViewController: SidemenuViewController, animated: Bool) {
+        hideSidemenu(animated: animated)
+    }
+
     func sidemenuViewController(_ sidemenuViewController: SidemenuViewController, didSelectItemAt indexPath: IndexPath) {
         hideSidemenu(animated: true)
     }
